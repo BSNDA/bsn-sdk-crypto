@@ -4,7 +4,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/tjfoc/gmsm/sm2"
-	gmx509 "github.com/tjfoc/gmsm/x509"
 	"testing"
 )
 
@@ -68,19 +67,19 @@ YRgctLay3FE5wWLqG0OH0p5fP8I5UT+pb1gkirIchlDxuwdVdVlUuQMrTQ==
 
 func TestGenerateKey(t *testing.T) {
 
-	key, err := sm2.GenerateKey(nil)
+	key, err := sm2.GenerateKey()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	privateKey, err := gmx509.WritePrivateKeyToPem(key, nil)
+	privateKey, err := sm2.WritePrivateKeytoMem(key, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	fmt.Println(string(privateKey))
 
-	publicKey, err := gmx509.WritePublicKeyToPem(&key.PublicKey)
+	publicKey, err := sm2.WritePublicKeytoMem(&key.PublicKey, nil)
 
 	if err != nil {
 		t.Fatal(err)
