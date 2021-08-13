@@ -1,11 +1,13 @@
 package sm
 
 import (
+	"crypto/rand"
 	"encoding/pem"
 	"github.com/BSNDA/bsn-sdk-crypto/crypto"
 	"github.com/BSNDA/bsn-sdk-crypto/errors"
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/sm3"
+	gmx509 "github.com/tjfoc/gmsm/x509"
 )
 
 var (
@@ -19,22 +21,22 @@ func getSmPuk(pub string) (*sm2.PublicKey, error) {
 		return nil, errors.New("load public key failed")
 	}
 	if block.Type == crypto.PublicKeyType {
-		return sm2.ReadPublicKeyFromMem([]byte(pub), nil)
+		return gmx509.ReadPublicKeyFromPem([]byte(pub))
 	}
 
 	if block.Type == crypto.CertType {
-		x509Cert, err := sm2.ParseCertificate(block.Bytes)
+		x509Cert, err := gmx509.ParseCertificate(block.Bytes)
 		if err != nil {
 			return nil, err
 		}
-		return sm2.ParseSm2PublicKey(x509Cert.RawSubjectPublicKeyInfo)
+		return gmx509.ParseSm2PublicKey(x509Cert.RawSubjectPublicKeyInfo)
 	}
 	return nil, errors.New("Error")
 }
 
 func NewSM2Handle(pub, pri string) (*sm2Handle, error) {
 
-	priKey, err := sm2.ReadPrivateKeyFromMem([]byte(pri), nil)
+	priKey, err := gmx509.ReadPrivateKeyFromPem([]byte(pri), nil)
 
 	if err != nil {
 		return nil, errors.New("load private key has error")
@@ -84,7 +86,7 @@ func (e *sm2Handle) Hash(msg []byte) ([]byte, error) {
 }
 
 func (e *sm2Handle) Sign(digest []byte) ([]byte, error) {
-	r, s, err := sm2.Sm2Sign(e.priKey, digest, default_uid)
+	r, s, err := sm2.Sm2Sign(e.priKey, digest, default_uid, rand.Reader)
 
 	sign, err := sm2.SignDigitToSignData(r, s)
 	if err != nil {
@@ -106,7 +108,7 @@ func (e *sm2Handle) Verify(sign, digest []byte) (bool, error) {
 
 func (e *sm2Handle) Encrypt(data []byte) ([]byte, error) {
 
-	return sm2.Encrypt(e.pubKey, data)
+	return sm2.Encrypt(e.pubKey, data, rand.Reader)
 
 }
 

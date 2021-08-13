@@ -2,6 +2,7 @@ package sm
 
 import (
 	"crypto/elliptic"
+	"crypto/rand"
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/sm3"
 	"math/big"
@@ -28,7 +29,7 @@ func SignData(key *sm2.PrivateKey, digest []byte) (r, s, pub *big.Int, err error
 	h.Write(digest)
 	hash := h.Sum(nil)
 
-	r, s, err = sm2.Sm2Sign(key, hash, default_uid)
+	r, s, err = sm2.Sm2Sign(key, hash, default_uid, rand.Reader)
 
 	if err != nil {
 		return
@@ -47,7 +48,7 @@ func SignDataCita(key *sm2.PrivateKey, digest []byte) (r, s, pub *big.Int, err e
 	h.Write(digest)
 	hash := h.Sum(nil)
 
-	r, s, err = sm2.Sm2Sign(key, hash, default_uid)
+	r, s, err = sm2.Sm2Sign(key, hash, default_uid, rand.Reader)
 
 	if err != nil {
 		return
