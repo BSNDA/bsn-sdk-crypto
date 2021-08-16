@@ -1,11 +1,3 @@
-/**
- * @Author: Gao Chenxi
- * @Description:
- * @File:  aes_test
- * @Version: 1.0.0
- * @Date: 2020/4/22 14:54
- */
-
 package keystore
 
 import (

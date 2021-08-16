@@ -26,6 +26,7 @@ import (
 	"crypto/x509"
 	"errors"
 	"fmt"
+
 	"github.com/BSNDA/bsn-sdk-crypto/keystore/key"
 )
 

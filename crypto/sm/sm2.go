@@ -2,9 +2,10 @@ package sm
 
 import (
 	"crypto/elliptic"
+	"math/big"
+
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/sm3"
-	"math/big"
 )
 
 func FromECDSAPub(pub *sm2.PublicKey) []byte {

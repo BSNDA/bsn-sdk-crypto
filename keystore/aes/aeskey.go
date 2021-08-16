@@ -22,6 +22,7 @@ package keystore
 import (
 	"crypto/sha256"
 	"errors"
+
 	"github.com/BSNDA/bsn-sdk-crypto/keystore/key"
 )
 

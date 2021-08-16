@@ -1,17 +1,10 @@
-/**
- * @Author: Gao Chenxi
- * @Description:
- * @File:  smkey
- * @Version: 1.0.0
- * @Date: 2020/7/16 15:07
- */
-
 package sm
 
 import (
 	"crypto/elliptic"
 	"crypto/sha256"
 	"fmt"
+
 	"github.com/BSNDA/bsn-sdk-crypto/errors"
 	"github.com/BSNDA/bsn-sdk-crypto/keystore/key"
 	"github.com/tjfoc/gmsm/sm2"

@@ -7,8 +7,9 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
-	"github.com/BSNDA/bsn-sdk-crypto/utils"
 	"testing"
+
+	"github.com/BSNDA/bsn-sdk-crypto/utils"
 )
 
 func TestNewPuk(t *testing.T) {

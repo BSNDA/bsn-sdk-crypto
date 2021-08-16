@@ -3,9 +3,10 @@ package common
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"github.com/BSNDA/bsn-sdk-crypto/errors"
 	"math/big"
 	"math/rand"
+
+	"github.com/BSNDA/bsn-sdk-crypto/errors"
 )
 
 const (
