@@ -12,6 +12,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math/big"
+
+	"github.com/BSNDA/bsn-sdk-crypto/utils"
 )
 
 const publicKeyLength = 64
@@ -219,4 +221,18 @@ func ECDSAPubBytes(pub *ecdsa.PublicKey) []byte {
 	copy(pubBytes[:], pub.X.Bytes())
 	copy(pubBytes[publicKeyLength/2:], pub.Y.Bytes())
 	return pubBytes
+}
+
+func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
+	if pub == nil || pub.X == nil || pub.Y == nil {
+		return nil
+	}
+	return elliptic.Marshal(pub.Curve, pub.X, pub.Y)
+}
+
+func FromECDSA(priv *ecdsa.PrivateKey) []byte {
+	if priv == nil {
+		return nil
+	}
+	return utils.PaddedBigBytes(priv.D, priv.Params().BitSize/8)
 }

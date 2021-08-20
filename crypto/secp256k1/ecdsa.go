@@ -10,11 +10,13 @@ import (
 	"encoding/asn1"
 	"encoding/pem"
 	"fmt"
+
 	"io"
 	"math/big"
 	"time"
 
 	"github.com/BSNDA/bsn-sdk-crypto/errors"
+	"github.com/BSNDA/bsn-sdk-crypto/utils"
 )
 
 const ecPrivKeyVersion = 1
@@ -536,16 +538,16 @@ func Hash(msg []byte) ([]byte, error) {
 	return hash, nil
 }
 
-//func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
-//	if pub == nil || pub.X == nil || pub.Y == nil {
-//		return nil
-//	}
-//	return elliptic.Marshal(pub.Curve, pub.X, pub.Y)
-//}
-//
-//func FromECDSA(priv *ecdsa.PrivateKey) []byte {
-//	if priv == nil {
-//		return nil
-//	}
-//	return math.PaddedBigBytes(priv.D, priv.Params().BitSize/8)
-//}
+func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
+	if pub == nil || pub.X == nil || pub.Y == nil {
+		return nil
+	}
+	return elliptic.Marshal(pub.Curve, pub.X, pub.Y)
+}
+
+func FromECDSA(priv *ecdsa.PrivateKey) []byte {
+	if priv == nil {
+		return nil
+	}
+	return utils.PaddedBigBytes(priv.D, priv.Params().BitSize/8)
+}
