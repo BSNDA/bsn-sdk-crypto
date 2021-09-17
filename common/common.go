@@ -1,10 +1,11 @@
 package common
 
 import (
+	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 	"math/big"
-	"math/rand"
 
 	"github.com/BSNDA/bsn-sdk-crypto/errors"
 )
@@ -33,11 +34,23 @@ func GetRandomNonce() ([]byte, error) {
 
 // GetRandomBigInt returns a random big int
 func GetRandomBigInt() (*big.Int, error) {
-	b, err := GetRandomBytes(32)
+	//b, err := GetRandomBytes(32)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//return new(big.Int).SetBytes(b), nil
+
+	// generate random Nonce between 0 - 2^250 - 1
+	max := new(big.Int)
+	max.Exp(big.NewInt(2), big.NewInt(250), nil).Sub(max, big.NewInt(1))
+	//Generate cryptographically strong pseudo-random between 0 - max
+	nonce, err := rand.Int(rand.Reader, max)
 	if err != nil {
-		return nil, err
+		//error handling
+		return nil, fmt.Errorf("failed to generate nonce: %v", err)
 	}
-	return new(big.Int).SetBytes(b), nil
+
+	return nonce, nil
 
 }
 
