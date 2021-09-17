@@ -12,9 +12,6 @@ import (
 type AlgorithmType int
 
 const (
-	PublicKeyType = "PUBLIC KEY"
-	CertType      = "CERTIFICATE"
-
 	SM  AlgorithmType = 1
 	R1  AlgorithmType = 2
 	K1  AlgorithmType = 3

@@ -5,8 +5,12 @@ import (
 	"crypto/sha256"
 	"encoding/pem"
 
-	"github.com/BSNDA/bsn-sdk-crypto/crypto"
 	"github.com/BSNDA/bsn-sdk-crypto/errors"
+)
+
+const (
+	PublicKeyType = "PUBLIC KEY"
+	CertType      = "CERTIFICATE"
 )
 
 func getPuk(pub string) (*ecdsa.PublicKey, error) {
@@ -16,12 +20,12 @@ func getPuk(pub string) (*ecdsa.PublicKey, error) {
 		return nil, errors.New("load public key failed")
 	}
 
-	if block.Type == crypto.PublicKeyType {
+	if block.Type == PublicKeyType {
 
 		return LoadPublicKey([]byte(pub))
 	}
 
-	if block.Type == crypto.CertType {
+	if block.Type == CertType {
 		return LoadPublicKeyByCert([]byte(pub))
 
 	}

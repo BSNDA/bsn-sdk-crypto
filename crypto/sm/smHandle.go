@@ -3,10 +3,14 @@ package sm
 import (
 	"encoding/pem"
 
-	"github.com/BSNDA/bsn-sdk-crypto/crypto"
 	"github.com/BSNDA/bsn-sdk-crypto/errors"
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/sm3"
+)
+
+const (
+	PublicKeyType = "PUBLIC KEY"
+	CertType      = "CERTIFICATE"
 )
 
 var (
@@ -19,11 +23,11 @@ func getSmPuk(pub string) (*sm2.PublicKey, error) {
 	if block == nil {
 		return nil, errors.New("load public key failed")
 	}
-	if block.Type == crypto.PublicKeyType {
+	if block.Type == PublicKeyType {
 		return sm2.ReadPublicKeyFromMem([]byte(pub), nil)
 	}
 
-	if block.Type == crypto.CertType {
+	if block.Type == CertType {
 		x509Cert, err := sm2.ParseCertificate(block.Bytes)
 		if err != nil {
 			return nil, err
