@@ -17,7 +17,7 @@ limitations under the License.
 Notice: This file has been modified for Hyperledger Fabric SDK Go usage.
 Please review third_party pinning scripts and patches for more details.
 */
-package keystore
+package aes
 
 import (
 	"crypto/sha256"

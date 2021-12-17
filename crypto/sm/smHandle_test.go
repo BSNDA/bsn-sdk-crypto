@@ -3,6 +3,7 @@ package sm
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/tjfoc/gmsm/sm2"
 	"testing"
 )
@@ -78,6 +79,7 @@ func TestGenerateKey(t *testing.T) {
 	}
 
 	fmt.Println(string(privateKey))
+	fmt.Println(hexutil.Encode(key.D.Bytes()))
 
 	publicKey, err := sm2.WritePublicKeytoMem(&key.PublicKey, nil)
 

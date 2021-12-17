@@ -4,6 +4,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/sha256"
 	"encoding/pem"
+	"math/big"
 
 	"github.com/BSNDA/bsn-sdk-crypto/errors"
 )
@@ -81,4 +82,13 @@ func (e *ecdsaK1Handle) Sign(digest []byte) ([]byte, error) {
 func (e *ecdsaK1Handle) Verify(sign, digest []byte) (bool, error) {
 	return VerifyECDSA(e.pubKey, sign, digest)
 
+}
+
+func NewKey(k *big.Int) (*ecdsa.PrivateKey, error) {
+	secp256k1 := SECP256K1()
+	priv := new(ecdsa.PrivateKey)
+	priv.PublicKey.Curve = secp256k1
+	priv.D = k
+	priv.PublicKey.X, priv.PublicKey.Y = secp256k1.ScalarBaseMult(k.Bytes())
+	return priv, nil
 }

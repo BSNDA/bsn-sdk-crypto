@@ -1,4 +1,4 @@
-package keystore
+package aes
 
 import (
 	"encoding/hex"

@@ -2,6 +2,7 @@ package sm
 
 import (
 	"encoding/pem"
+	"math/big"
 
 	"github.com/BSNDA/bsn-sdk-crypto/errors"
 	"github.com/tjfoc/gmsm/sm2"
@@ -17,11 +18,11 @@ var (
 	default_uid = []byte{0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38}
 )
 
-func getSmPuk(pub string) (*sm2.PublicKey, error) {
+func RedPublicKeyByPEM(pub string) (*sm2.PublicKey, error) {
 	block, _ := pem.Decode([]byte(pub))
 
 	if block == nil {
-		return nil, errors.New("load public key failed")
+		return nil, errors.New("not pem")
 	}
 	if block.Type == PublicKeyType {
 		return sm2.ReadPublicKeyFromMem([]byte(pub), nil)
@@ -50,7 +51,7 @@ func NewSM2Handle(pub, pri string) (*sm2Handle, error) {
 	if pub == "" {
 		pubKey = &priKey.PublicKey
 	} else {
-		pubKey, err = getSmPuk(pub)
+		pubKey, err = RedPublicKeyByPEM(pub)
 		if err != nil {
 			return nil, errors.New("load public key has error")
 		}
@@ -119,4 +120,13 @@ func (e *sm2Handle) Decrypt(data []byte) ([]byte, error) {
 
 	return sm2.Decrypt(e.priKey, data)
 
+}
+
+func NewKey(k *big.Int) (*sm2.PrivateKey, error) {
+	secp256k1 := sm2.P256Sm2()
+	priv := new(sm2.PrivateKey)
+	priv.PublicKey.Curve = secp256k1
+	priv.D = k
+	priv.PublicKey.X, priv.PublicKey.Y = secp256k1.ScalarBaseMult(k.Bytes())
+	return priv, nil
 }
