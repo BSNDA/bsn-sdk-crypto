@@ -440,6 +440,9 @@ func UnmarshalECDSASignature(raw []byte) (*big.Int, *big.Int, error) {
 func SignData(privk *ecdsa.PrivateKey, digest []byte) (r, s, v *big.Int, sign []byte, err error) {
 
 	sig, err := crypto.Sign(digest, privk)
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
 
 	r = new(big.Int).SetBytes(sig[:32])
 	s = new(big.Int).SetBytes(sig[32:64])
