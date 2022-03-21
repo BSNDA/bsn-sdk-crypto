@@ -6,8 +6,7 @@ import (
 	"crypto/x509/pkix"
 	"encoding/asn1"
 	"encoding/pem"
-	signer2 "github.com/BSNDA/bsn-sdk-crypto/crypto/sm/signer"
-	"github.com/BSNDA/bsn-sdk-crypto/errors"
+	"github.com/pkg/errors"
 	"net"
 	"net/mail"
 	"net/url"
@@ -15,17 +14,6 @@ import (
 	"github.com/cloudflare/cfssl/csr"
 	"github.com/tjfoc/gmsm/sm2"
 )
-
-// CSR new cer string
-func CSR(key *sm2.PrivateKey, cr *csr.CertificateRequest) ([]byte, error) {
-	//cr.KeyRequest = newSm2BasicKeyRequest()
-	signer := signer2.NewSMSigner(key)
-	return GenerateSM2CSR(signer, cr)
-}
-
-//func newSm2BasicKeyRequest() *csr.KeyRequest {
-//	return &csr.KeyRequest{A: "sm2", S: 256}
-//}
 
 // Generate creates a new CSR from a CertificateRequest structure and
 // an existing key. The KeyRequest field is ignored.
