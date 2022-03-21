@@ -3,11 +3,10 @@ package common
 import (
 	"crypto/rand"
 	"crypto/sha256"
-	"encoding/hex"
 	"fmt"
 	"math/big"
 
-	"github.com/BSNDA/bsn-sdk-crypto/errors"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -54,18 +53,6 @@ func GetRandomBigInt() (*big.Int, error) {
 
 }
 
-func ComputeTxnID(nonce, creator []byte) (string, error) {
-	h := sha256.New()
-	b := append(nonce, creator...)
-	_, err := h.Write(b)
-	if err != nil {
-		return "", err
-	}
-	digest := h.Sum(nil)
-	id := hex.EncodeToString(digest)
-	return id, nil
-}
-
 // GetHash return sha256 hash
 func GetHash(data []byte) ([]byte, error) {
 	h := sha256.New()
@@ -75,4 +62,11 @@ func GetHash(data []byte) ([]byte, error) {
 	}
 	digest := h.Sum(nil)
 	return digest, nil
+}
+
+// Clone clones the passed slice
+func Clone(src []byte) []byte {
+	clone := make([]byte, len(src))
+	copy(clone, src)
+	return clone
 }

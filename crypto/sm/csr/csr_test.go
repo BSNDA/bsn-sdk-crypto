@@ -21,10 +21,10 @@ func TestCSR(t *testing.T) {
 		O:  "Bsn",
 	})
 
-	csr, err := CSR(key, cr)
+	csrRaw, err := GenerateSM2CSR(key, cr)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	fmt.Println(string(csr))
+	fmt.Println(string(csrRaw))
 }
