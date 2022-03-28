@@ -52,10 +52,10 @@ func TestNewSMOrR1PrivateKey(t *testing.T) {
 
 func TestSM(t *testing.T) {
 	privKey := `-----BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQg/72OnGX5Ncte+h6H
-dipVx4zQUxCWLZFirJdVAZ9+7NGgCgYIKoEcz1UBgi2hRANCAATF4d6a97adi4Ff
-8urHzM3omTMvlDaPStq2dmTfZfXHuA+rO3erOrBmou8o8wWdOE41H75RfS9VRrvl
-0zZ8x9dS
+MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQgx0co92s16WJUCBLm
+RU2gTV2c+D5O+9KWm2ZIQUz7rJigCgYIKoEcz1UBgi2hRANCAAQzP2/FhudZaTWO
+WthN4vDM7oxZIyX+Ni/vD0BxbNDlX2QzZL5hPWMav6p/oCqx8Kh/LFg/h0GWylRK
+dP/3ofLg
 -----END PRIVATE KEY-----`
 
 	key, err := NewPrivateKeyProvider(types.SM, privKey)
