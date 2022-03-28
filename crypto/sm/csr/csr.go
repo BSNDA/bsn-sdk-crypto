@@ -7,21 +7,21 @@ import (
 	"encoding/asn1"
 	"encoding/pem"
 	"github.com/pkg/errors"
+	"github.com/tjfoc/gmsm/x509"
 	"net"
 	"net/mail"
 	"net/url"
 
 	"github.com/cloudflare/cfssl/csr"
-	"github.com/tjfoc/gmsm/sm2"
 )
 
 // Generate creates a new CSR from a CertificateRequest structure and
 // an existing key. The KeyRequest field is ignored.
 func GenerateSM2CSR(priv crypto.Signer, req *csr.CertificateRequest) (csr []byte, err error) {
 
-	var tpl = sm2.CertificateRequest{
+	var tpl = x509.CertificateRequest{
 		Subject:            req.Name(),
-		SignatureAlgorithm: sm2.SM2WithSM3,
+		SignatureAlgorithm: x509.SM2WithSM3,
 	}
 
 	for i := range req.Hosts {
@@ -44,7 +44,7 @@ func GenerateSM2CSR(priv crypto.Signer, req *csr.CertificateRequest) (csr []byte
 		}
 	}
 
-	csr, err = sm2.CreateCertificateRequest(rand.Reader, &tpl, priv)
+	csr, err = x509.CreateCertificateRequest(rand.Reader, &tpl, priv)
 	if err != nil {
 		err = errors.New("")
 		return
@@ -64,7 +64,7 @@ type BasicConstraints struct {
 }
 
 // appendCAInfoToCSR appends CAConfig BasicConstraint extension to a CSR
-func appendCAInfoToCSRSm2(reqConf *csr.CAConfig, csr *sm2.CertificateRequest) error {
+func appendCAInfoToCSRSm2(reqConf *csr.CAConfig, csr *x509.CertificateRequest) error {
 	pathlen := reqConf.PathLength
 	if pathlen == 0 && !reqConf.PathLenZero {
 		pathlen = -1

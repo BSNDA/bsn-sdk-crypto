@@ -3,6 +3,8 @@ package sm
 import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
+	"crypto/rand"
+	"github.com/tjfoc/gmsm/x509"
 	"math/big"
 
 	math "github.com/BSNDA/bsn-sdk-crypto/common"
@@ -23,7 +25,7 @@ type PublicKey struct {
 } // = sm2.PublicKey
 
 func GenerateKey() (*PrivateKey, error) {
-	k, err := sm2.GenerateKey()
+	k, err := sm2.GenerateKey(rand.Reader)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +35,7 @@ func GenerateKey() (*PrivateKey, error) {
 }
 
 func Sm2Sign(priv *PrivateKey, msg []byte) (r, s *big.Int, err error) {
-	return sm2.Sm2Sign(priv.PrivateKey, msg, default_uid)
+	return sm2.Sm2Sign(priv.PrivateKey, msg, default_uid,rand.Reader)
 }
 
 func Sm2Verify(pub *PublicKey, msg []byte, r, s *big.Int) bool {
@@ -49,7 +51,7 @@ func SignDataToSignDigit(sign []byte) (*big.Int, *big.Int, error) {
 }
 
 func ReadPrivateKeyFromMem(data []byte, pwd []byte) (*PrivateKey, error) {
-	k, err := sm2.ReadPrivateKeyFromMem(data, pwd)
+	k, err := x509.ReadPrivateKeyFromPem(data, pwd)
 	if err != nil {
 		return nil, err
 	}
@@ -58,11 +60,11 @@ func ReadPrivateKeyFromMem(data []byte, pwd []byte) (*PrivateKey, error) {
 	}, nil
 }
 func WritePrivateKeytoMem(key *PrivateKey, pwd []byte) ([]byte, error) {
-	return sm2.WritePrivateKeytoMem(key.PrivateKey, pwd)
+	return x509.WritePrivateKeyToPem(key.PrivateKey, pwd)
 }
 
 func ReadPublicKeyFromMem(data []byte, _ []byte) (*PublicKey, error) {
-	puk, err := sm2.ReadPublicKeyFromMem(data, nil)
+	puk, err := x509.ReadPublicKeyFromPem(data)
 	if err != nil {
 		return nil, err
 	}
@@ -70,12 +72,12 @@ func ReadPublicKeyFromMem(data []byte, _ []byte) (*PublicKey, error) {
 		puk,
 	}, nil
 }
-func ParseCertificate(asn1Data []byte) (*sm2.Certificate, error) {
-	return sm2.ParseCertificate(asn1Data)
+func ParseCertificate(asn1Data []byte) (*x509.Certificate, error) {
+	return x509.ParseCertificate(asn1Data)
 }
 
 func ParseSm2PublicKey(der []byte) (*PublicKey, error) {
-	puk, err := sm2.ParseSm2PublicKey(der)
+	puk, err := x509.ParseSm2PublicKey(der)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +87,7 @@ func ParseSm2PublicKey(der []byte) (*PublicKey, error) {
 }
 
 func WritePublicKeytoMem(key *PublicKey, _ []byte) ([]byte, error) {
-	return sm2.WritePublicKeytoMem(key.PublicKey, nil)
+	return x509.WritePublicKeyToPem(key.PublicKey)
 }
 
 func FromECDSAPub(pub *sm2.PublicKey) []byte {
@@ -105,7 +107,7 @@ func FromECDSA(priv *sm2.PrivateKey) []byte {
 
 func SignData(key *sm2.PrivateKey, digest []byte) (r, s, pub *big.Int, err error) {
 
-	r, s, err = sm2.Sm2Sign(key, digest, default_uid)
+	r, s, err = sm2.Sm2Sign(key, digest, default_uid,rand.Reader)
 
 	if err != nil {
 		return
@@ -125,7 +127,7 @@ func SignDataCita(key *sm2.PrivateKey, digest []byte) (r, s, pub *big.Int, err e
 	h.Write(digest)
 	hash := h.Sum(nil)
 
-	r, s, err = sm2.Sm2Sign(key, hash, default_uid)
+	r, s, err = sm2.Sm2Sign(key, hash, default_uid,rand.Reader)
 
 	if err != nil {
 		return
@@ -140,7 +142,7 @@ func SignDataCita(key *sm2.PrivateKey, digest []byte) (r, s, pub *big.Int, err e
 }
 
 func ConvertSMPublicKey(pubkey string) (*ecdsa.PublicKey, error) {
-	puk, err := sm2.ReadPublicKeyFromMem([]byte(pubkey), nil)
+	puk, err := x509.ReadPublicKeyFromPem([]byte(pubkey))
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +154,7 @@ func ConvertSMPublicKey(pubkey string) (*ecdsa.PublicKey, error) {
 }
 
 func ConvertSMPrivateKey(prikey string) (*ecdsa.PrivateKey, error) {
-	pkey, err := sm2.ReadPrivateKeyFromMem([]byte(prikey), nil)
+	pkey, err := x509.ReadPrivateKeyFromPem([]byte(prikey), nil)
 	if err != nil {
 		return nil, err
 	}
